@@ -37,3 +37,4 @@ todo:
   delete prev converted folder after popup! in front
   properly clean terminal
   load only one window
+  kill ffmpeg on app close 

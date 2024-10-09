@@ -1,3 +1,2 @@
-- render explorer
-- expand/collapse
-- remove from list
+filter unsupported files in getDetails func in utils.ts n imp live progress feedback in front
+- update supported files list

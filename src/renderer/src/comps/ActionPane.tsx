@@ -13,7 +13,8 @@ export default function ActionPane(): JSX.Element {
   const showSelectedFilesNotification = (): void => {
     notification.info({
       message: 'No Content Loaded',
-      description: 'Please load content using one of the methods above, then pick an output directory!',
+      description:
+        'Please load content using one of the methods above, then pick an output directory!',
       icon: <InfoCircleOutlined style={{ color: '#1890ff' }} />,
       placement: 'topRight',
       duration: 3

@@ -8,7 +8,8 @@ export type DirItem = {
   ext?: ext
   size: string
   duration?: string
-  children?: DirItem[]
+  children?: (DirItem | null)[] | undefined
+  progress?: number
 }
 
 export type ExplorerContextType = {

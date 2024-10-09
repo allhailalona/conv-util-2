@@ -42,7 +42,7 @@ const handleGetDetails = async (
           }
 
           return detailedFolder
-        } else if (stats.isFile()) {
+        } else if (stats.isFile() && ['video', 'audio', 'image'].includes(isValidExt(path))) {
           // 2. Check if the file exension is media
           const pathExt = isValidExt(path)
           if (['video', 'audio', 'image'].includes(pathExt!)) {
@@ -67,23 +67,22 @@ const handleGetDetails = async (
     })
   )
 
-  // Filter status: fullfilled from the result
-  const unwrapFulfilled = (item: any): any => {
-    if (item && typeof item === 'object') {
-      if (item.status === 'fulfilled' && 'value' in item) {
-        return unwrapFulfilled(item.value)
+  const filteredRes = (items) => {
+    return items.reduce((acc, item) => {
+      if (item.status === 'fulfilled') {
+        if (item.value) {
+          acc.push(item.value)
+        }
+        // If no value, item is not added to acc (effectively deleted)
+      } else {
+        if (item.children && item.children.length > 0) {
+          item.children = filteredRes(item.children)
+        }
+        acc.push(item)
       }
-      if (Array.isArray(item)) {
-        return item.map(unwrapFulfilled)
-      }
-      return Object.fromEntries(
-        Object.entries(item).map(([key, value]) => [key, unwrapFulfilled(value)])
-      )
-    }
-    return item
+      return acc
+    }, [])
   }
-
-  const filteredRes = unwrapFulfilled(res)
 
   // A logging tecnique, doesn't manipulate the object
   const getCircularReplacer = () => {
@@ -99,8 +98,8 @@ const handleGetDetails = async (
     }
   }
 
-  console.log('explorer is', JSON.stringify(filteredRes, getCircularReplacer(), 2))
-  return filteredRes
+  console.log('explorer is', JSON.stringify(filteredRes(res), getCircularReplacer(), 2))
+  return filteredRes(res)
 }
 
 async function handleConvertExplorer(
